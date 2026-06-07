@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Enchanted Chronicles</title>
+ 
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=IM+Fell+English:ital@0;1&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet" />
+ 
+  <style>
+    /* ── Reset & Base ────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+    :root {
+      --parchment:      #f5e9c9;
+      --parchment-dark: #e8d5a3;
+      --parchment-deep: #c9a96e;
+      --ink:            #2b1a0e;
+      --ink-soft:       #4a3020;
+      --gold:           #c8922a;
+      --gold-light:     #f0c060;
+      --gold-pale:      #faedc4;
+      --crimson:        #8b1a2a;
+      --sapphire:       #1a3a6b;
+      --forest:         #1a4a2a;
+      --violet:         #3a1a5a;
+      --shadow:         rgba(43, 26, 14, 0.35);
+ 
+      --font-title:  'Cinzel Decorative', serif;
+      --font-body:   'IM Fell English', serif;
+      --font-elegant:'Cormorant Garamond', serif;
+    }
+ 
+    html { scroll-behavior: smooth; }
+ 
+    body {
+      background-color: #1a0f06;
+      background-image:
+        radial-gradient(ellipse 80% 50% at 50% 0%, #3a1f0a 0%, transparent 70%),
+        repeating-linear-gradient(
+          0deg, transparent, transparent 40px,
+          rgba(255,255,255,0.015) 40px, rgba(255,255,255,0.015) 41px
+        );
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem 4rem;
+      font-family: var(--font-body);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+ 
+    /* ── Floating Particles ─────────────────────────────────────── */
+    .particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .particle {
+      position: absolute;
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--gold-light);
+      opacity: 0;
+      animation: float-up linear infinite;
+    }
+    @keyframes float-up {
+      0%   { opacity: 0; transform: translateY(0) scale(0.5); }
+      10%  { opacity: 0.7; }
+      90%  { opacity: 0.3; }
+      100% { opacity: 0; transform: translateY(-100vh) scale(1.2) rotate(360deg); }
+    }
+ 
+    /* ── Book Container ─────────────────────────────────────────── */
+    .book-wrap {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 860px;
+      filter: drop-shadow(0 30px 60px rgba(0,0,0,0.8));
+    }
+ 
+    /* Corner ornaments */
+    .book-wrap::before, .book-wrap::after {
+      content: '❧';
+      position: absolute;
+      font-size: 2rem;
+      color: var(--gold);
+      z-index: 10;
+    }
+    .book-wrap::before { top: -0.2rem; left: 1rem; transform: scaleX(-1); }
+    .book-wrap::after  { top: -0.2rem; right: 1rem; }
+ 
+    .book {
+      background: var(--parchment);
+      background-image:
+        radial-gradient(ellipse 60% 40% at 30% 20%, rgba(255,255,255,0.25) 0%, transparent 60%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+      border-radius: 4px 16px 16px 4px;
+      border: 2px solid var(--parchment-deep);
+      border-left: 14px solid #5a2d0c;
+      padding: 3rem 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+ 
+    /* Page aging edge */
+    .book::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0; bottom: 0;
+      width: 40px;
+      background: linear-gradient(to left, rgba(180,140,80,0.2), transparent);
+      pointer-events: none;
+    }
+ 
+    /* Binding line shadow */
+    .book::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: 30px;
+      background: linear-gradient(to right, rgba(0,0,0,0.15), transparent);
+      pointer-events: none;
+    }
+ 
+    /* ── Page Decorative Borders ────────────────────────────────── */
+    .page-border {
+      border: 2px solid var(--gold);
+      border-image: none;
+      padding: 2.5rem 2rem;
+      position: relative;
+    }
+    .page-border::before, .page-border::after,
+    .page-border .corner-tl, .page-border .corner-br {
+      content: '✦';
+      position: absolute;
+      font-size: 1.4rem;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .page-border::before  { top: -0.75rem;  left: -0.75rem; }
+    .page-border::after   { top: -0.75rem;  right: -0.75rem; }
+    .page-border .corner-tl { bottom: -0.75rem; left: -0.75rem; }
+    .page-border .corner-br { bottom: -0.75rem; right: -0.75rem; }
+ 
+    /* Horizontal ornamental rule */
+    .ornamental-rule {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .ornamental-rule::before, .ornamental-rule::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+    }
+    .ornamental-rule span { color: var(--gold); font-size: 1.1rem; white-space: nowrap; }
+ 
+    /* ── Cover Page ─────────────────────────────────────────────── */
+    #cover {
+      text-align: center;
+    }
+ 
+    .cover-illumination {
+      width: 200px;
+      height: 200px;
+      margin: 0 auto 1.5rem;
+      position: relative;
+    }
+ 
+    .cover-medallion {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fef3d0, #c8922a 50%, #7a4a10);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+      border: 4px solid var(--gold-light);
+      box-shadow:
+        0 0 0 8px rgba(200,146,42,0.2),
+        0 0 0 16px rgba(200,146,42,0.1),
+        0 20px 60px rgba(0,0,0,0.5);
+      animation: medallion-glow 4s ease-in-out infinite;
+    }
+    @keyframes medallion-glow {
+      0%, 100% { box-shadow: 0 0 0 8px rgba(200,146,42,0.2), 0 0 0 16px rgba(200,146,42,0.1), 0 20px 60px rgba(0,0,0,0.5); }
+      50%       { box-shadow: 0 0 0 12px rgba(200,146,42,0.35), 0 0 0 24px rgba(200,146,42,0.15), 0 20px 80px rgba(200,146,42,0.3); }
+    }
+ 
+    .book-series {
+      font-family: var(--font-elegant);
+      font-size: 0.85rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+ 
+    h1.book-title {
+      font-family: var(--font-title);
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      font-weight: 900;
+      color: var(--ink);
+      text-shadow: 2px 2px 0 var(--parchment-deep), 4px 4px 8px var(--shadow);
+      line-height: 1.2;
+      margin-bottom: 0.25rem;
+    }
+ 
+    .book-subtitle {
+      font-family: var(--font-elegant);
+      font-style: italic;
+      font-size: 1.15rem;
+      color: var(--ink-soft);
+      margin-bottom: 1.5rem;
+    }
+ 
+    .cover-description {
+      font-family: var(--font-elegant);
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: var(--ink-soft);
+      max-width: 520px;
+      margin: 0 auto 2rem;
+      font-style: italic;
+    }
+ 
+    /* ── Story Scenes ───────────────────────────────────────────── */
+    .scene { display: none; }
+    .scene.active { display: block; animation: page-turn 0.5s ease-out; }
+    @keyframes page-turn {
+      0%   { opacity: 0; transform: translateX(30px) rotateY(-8deg); }
+      100% { opacity: 1; transform: translateX(0) rotateY(0); }
+    }
+ 
+    /* Scene illustration banner */
+    .scene-illustration {
+      width: calc(100% + 4rem);
+      margin: -2.5rem -2rem 2rem;
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+ 
+    .scene-illustration::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, var(--parchment) 100%);
+    }
+ 
+    .chapter-label {
+      font-family: var(--font-elegant);
+      font-size: 0.8rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+ 
+    h2.scene-title {
+      font-family: var(--font-title);
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      color: var(--ink);
+      text-shadow: 1px 1px 3px var(--shadow);
+      margin-bottom: 1.25rem;
+    }
+ 
+    .scene-text {
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      line-height: 1.9;
+      color: var(--ink-soft);
+      margin-bottom: 1rem;
+    }
+    .scene-text:first-letter {
+      font-family: var(--font-title);
+      font-size: 3.5rem;
+      font-weight: 900;
+      float: left;
+      line-height: 0.75;
+      margin: 0.1em 0.1em 0 0;
+      color: var(--gold);
+      text-shadow: 2px 2px 0 var(--crimson);
+    }
+    .scene-text.no-drop:first-letter {
+      all: unset;
+    }
+ 
+    /* ── Choices ────────────────────────────────────────────────── */
+    .choices-header {
+      font-family: var(--font-elegant);
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+ 
+    .choices { display: flex; flex-direction: column; gap: 0.75rem; }
+ 
+    .choice-btn {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      background: linear-gradient(135deg, rgba(200,146,42,0.08), rgba(200,146,42,0.03));
+      border: 1px solid var(--gold);
+      border-radius: 4px;
+      padding: 1rem 1.25rem;
+      cursor: pointer;
+      text-align: left;
+      font-family: var(--font-elegant);
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--ink);
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .choice-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(200,146,42,0.15), transparent);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+    .choice-btn:hover { border-color: var(--gold-light); transform: translateX(4px); }
+    .choice-btn:hover::before { opacity: 1; }
+    .choice-btn:active { transform: translateX(2px) scale(0.99); }
+ 
+    .choice-glyph {
+      font-family: var(--font-title);
+      font-size: 1.1rem;
+      color: var(--gold);
+      min-width: 1.5rem;
+      line-height: 1.4;
+    }
+ 
+    .choice-text { flex: 1; line-height: 1.5; }
+ 
+    /* ── Endings ────────────────────────────────────────────────── */
+    .ending-banner {
+      text-align: center;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 4px;
+    }
+    .ending-banner.triumph {
+      background: linear-gradient(135deg, rgba(26,74,42,0.1), rgba(200,146,42,0.1));
+      border: 1px solid var(--forest);
+    }
+    .ending-banner.dark {
+      background: linear-gradient(135deg, rgba(139,26,42,0.1), rgba(58,26,90,0.1));
+      border: 1px solid var(--crimson);
+    }
+ 
+    .ending-label {
+      font-family: var(--font-title);
+      font-size: 0.7rem;
+      letter-spacing: 0.4em;
+      margin-bottom: 0.5rem;
+    }
+    .ending-banner.triumph .ending-label { color: var(--forest); }
+    .ending-banner.dark    .ending-label { color: var(--crimson); }
+ 
+    .ending-title {
+      font-family: var(--font-title);
+      font-size: 1.4rem;
+      margin-bottom: 0.25rem;
+    }
+    .ending-banner.triumph .ending-title { color: var(--forest); }
+    .ending-banner.dark    .ending-title { color: var(--crimson); }
+ 
+    .restart-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+      padding: 0.8rem 2rem;
+      background: var(--gold);
+      color: var(--ink);
+      font-family: var(--font-title);
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: all 0.2s;
+      box-shadow: 0 4px 15px rgba(200,146,42,0.4);
+    }
+    .restart-btn:hover {
+      background: var(--gold-light);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(200,146,42,0.5);
+    }
+ 
+    /* ── Begin Button ───────────────────────────────────────────── */
+    .begin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 2.5rem;
+      background: linear-gradient(135deg, var(--gold) 0%, #a06820 100%);
+      color: var(--parchment);
+      font-family: var(--font-title);
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(200,146,42,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+      transition: all 0.25s;
+    }
+    .begin-btn:hover {
+      background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(200,146,42,0.6);
+    }
+    .begin-btn:active { transform: translateY(-1px); }
+ 
+    /* ── Footer ─────────────────────────────────────────────────── */
+    .book-footer {
+      margin-top: 2rem;
+      text-align: center;
+      font-family: var(--font-elegant);
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      color: var(--parchment-deep);
+      opacity: 0.6;
+    }
+ 
+    /* ── Progress trail ─────────────────────────────────────────── */
+    .trail {
+      font-family: var(--font-elegant);
+      font-size: 0.8rem;
+      font-style: italic;
+      color: var(--parchment-deep);
+      margin-bottom: 1rem;
+      min-height: 1.2em;
+    }
+ 
+    /* ── Responsive ─────────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .book { padding: 2rem 1.5rem; }
+      .page-border { padding: 1.5rem 1rem; }
+      .scene-illustration { height: 120px; font-size: 3.5rem; }
+    }
+  </style>
+</head>
+<body>
+ 
+  <!-- Ambient particles -->
+  <div class="particles" id="particles"></div>
+ 
+  <div class="book-wrap">
+    <div class="book">
+      <div class="page-border">
+        <div class="corner-tl"></div>
+        <div class="corner-br"></div>
+ 
+        <!-- Path breadcrumb trail -->
+        <div class="trail" id="trail"></div>
+ 
+        <!-- ══════════════════════════════════════════
+             COVER / TITLE SCREEN
+        ══════════════════════════════════════════ -->
+        <div id="cover" class="scene active">
+          <div style="text-align:center;">
+            <div class="cover-illumination">
+              <div class="cover-medallion">🏰</div>
+            </div>
+ 
+            <p class="book-series">The Enchanted Chronicles · Book One</p>
+ 
+            <div class="ornamental-rule">
+              <span>⸻ ✦ ⸻</span>
+            </div>
+ 
+            <h1 class="book-title">The Kingdom<br>of Forgotten Stars</h1>
+            <p class="book-subtitle">A Tale of Courage, Magic, and Destiny</p>
+ 
+            <div class="ornamental-rule">
+              <span>⸻ ❧ ⸻</span>
+            </div>
+ 
+            <p class="cover-description">
+              Once upon a midnight unlike all others, when the last star
+              blinked out from the sky above the Kingdom of Aeloria,
+              a young soul found themselves at the crossroads of fate —
+              and the world held its breath, waiting for
+              <em>your</em> choice.
+            </p>
+ 
+            <button class="begin-btn" onclick="goTo('scene-1')">
+              ✦ &nbsp; Open the Book &nbsp; ✦
+            </button>
+ 
+            <p style="margin-top:1.25rem; font-family:var(--font-elegant); font-style:italic; font-size:0.85rem; color:var(--ink-soft); opacity:0.7;">
+              Your choices shape the tale. Choose wisely.
+            </p>
+          </div>
+        </div>
+ 
+        <!-- ══════════════════════════════════════════
+             SCENE 1 · The Crossroads at Midnight
+        ══════════════════════════════════════════ -->
+        <div id="scene-1" class="scene">
+          <div class="scene-illustration" style="background: linear-gradient(180deg, #0d1b2a 0%, #1a3a5a 60%, #2d5a3a 100%);">
+            🌌🌲🌲🌲🌲🌌
+          </div>
+ 
+          <p class="chapter-label">Chapter I</p>
+          <h2 class="scene-title">The Crossroads at Midnight</h2>
+ 
+          <p class="scene-text">
+            You stand at the heart of the Whispering Wood, where three moonlit
+            paths converge. The ancient trees tower above you like cathedral
+            spires, their silver leaves rustling secrets in a windless night.
+            In your satchel rests the only clue your dying grandmother pressed
+            into your palm — a compass that spins wildly, drawn not north, but
+            toward <em>something</em>.
+          </p>
+          <p class="scene-text no-drop">
+            Ahead, a crumbling stone marker bears three carved symbols: a
+            crown, a flame, and a crescent moon. Faint lights flicker in the
+            distance along each path, and somewhere in the darkness, a child
+            is crying.
+          </p>
+ 
+          <div class="ornamental-rule"><span>✦</span></div>
+ 
+          <p class="choices-header">⟡ What do you do?</p>
+          <div class="choices">
+            <button class="choice-btn" onclick="goTo('scene-2a')">
+              <span class="choice-glyph">I</span>
+              <span class="choice-text">Follow the path marked with the <strong>crown</strong> — toward the distant lights of what appears to be a castle.</span>
+            </button>
+            <button class="choice-btn" onclick="goTo('scene-2b')">
+              <span class="choice-glyph">II</span>
+              <span class="choice-text">Take the path marked with the <strong>flame</strong> — a warm orange glow flickers through the trees, smelling of wood smoke.</span>
+            </button>
+            <button class="choice-btn" onclick="goTo('scene-2c')">
+              <span class="choice-glyph">III</span>
+              <span class="choice-text">Follow the sound of <strong>the crying child</strong> — it seems to come from the moonlit path, wherever it may lead.</span>
+            </button>
+          </div>
+        </div>
+ 
+        <!-- ══════════════════════════════════════════
+             SCENE 2A · The Castle Gates
+        ══════════════════════════════════════════ -->
+        <div id="scene-2a" class="scene">
+          <div class="scene-illustration" style="background: linear-gradient(180deg, #0a0a1a 0%, #1a1a4a 60%, #3a2a1a 100%);">
+            🌙🏰🌙
+          </div>
+          <p class="chapter-label">Chapter II — The Crown Path</p>
+          <h2 class="scene-title">Gates of Castle Vaelthorn</h2>
+ 
+          <p class="scene-text">
+            The castle looms from the fog like a half-remembered dream —
+            towers of black obsidian crowned with banners of deep violet, lit
+            from within by a cold blue luminescence. The iron gates stand
+            ajar, as if expecting you. A lone guard in silver armor dozes
+            at his post; beside him, a visitor's ledger lies open.
+          </p>
+          <p class="scene-text no-drop">
+            The compass in your satchel lurches violently — the strongest pull
+            yet — pointing somewhere <em>within</em> those walls. Whatever
+            your grandmother sent you to find, it is here.
+          </p>
+ 
+          <div class="ornamental-rule"><span>✦</span></div>
+ 
+          <p class="choices-header">⟡ What do you do?</p>
+          <div class="choices">
+            <button class="choice-btn" onclick="goTo('scene-3a')">
+              <span class="choice-glyph">I</span>
+              <span class="choice-text">Sign the ledger with your true name and knock loudly — let the castle know you have arrived with purpose.</span>
+            </button>
+            <button class="choice-btn" onclick="goTo('scene-3b')">
+              <span class="choice-glyph">II</span>
+              <span class="choice-text">Slip through the open gate while the guard sleeps, following the compass deeper into the courtyard undetected.</span>
+            </button>
+          </div>
+        </div>
+ 
+        <!-- ══════════════════════════════════════════
+             SCENE 2B · The Hearthfire Cottage
+        ══════════════════════════════════════════ -->
+        <div id="scene-2b" class="scene">
+          <div class="scene-illustration" style="background: linear-gradient(180deg, #1a0d05 0%, #4a2010 60%, #2a1a05 100%);">
+            🔥🏡🔥
+          </div>
+          <p class="chapter-label">Chapter II — The Flame Path</p>
+          <h2 class="scene-title">The Hearthfire Witch</h2>
+ 
+          <p class="scene-text">
+            The path opens into a mossy clearing where a crooked cottage
+            leans comfortably against an ancient oak. Smoke curls in golden
+            spirals from the chimney; the scent is honey, cinnamon, and
+            something stranger — starlight, if starlight had a smell.
+            A figure in an amber cloak tends a garden of glowing flowers,
+            humming a melody you somehow already know.
+          </p>
+          <p class="scene-text no-drop">
+            She turns before you speak. Her eyes are two different colors —
+            one storm-grey, one sunrise-gold — and her smile is
+            ancient and warm. <em>"Ah,"</em> she says. <em>"You finally came."</em>
+          </p>
+ 
+          <div class="ornamental-rule"><span>✦</span></div>
+ 
+          <p class="choices-header">⟡ What do you do?</p>
+          <div class="choices">
+            <button class="choice-btn" onclick="goTo('scene-3c')">
+              <span class="choice-glyph">I</span>
+              <span class="choice-text">Ask her what she means — you have never been here before, and yet somehow you feel she is right.</span>
+            </button>
+            <button class="choice-btn" onclick="goTo('scene-3d')">
+              <span class="choice-glyph">II</span>
+              <span class="choice-text">Show her the compass immediately — she clearly knows something, and there is no time for pleasantries.</span>
+            </button>
+          </div>
+        </div>
+ 
+        <!-- ══════════════════════════════════════════
+             SCENE 2C · The Moonlit Child
+        ══════════════════════════════════════════ -->
+        <div id="scene-2c" class="scene">
+          <div class="scene-illustration" style="background: linear-gradient(180deg, #0d0d0d 0%, #1a1a3a 50%, #2a1a3a 100%);">
+            🌕✨🌕
+          </div>
+          <p class="chapter-label">Chapter II — The Moon Path</p>
+          <h2 class="scene-title">The Child of Silver Light</h2>
+ 
+          <p class="scene-text">
+            You find the child sitting cross-legged on a flat stone, weeping
+            silver tears that fall upward, dissolving into the night sky like
+            tiny returning stars. She cannot be more than eight years old —
+            and yet when she looks up at you, her eyes hold the quiet depth
+            of centuries. Her dress is woven from actual moonlight.
+          </p>
+          <p class="scene-text no-drop">
+            <em>"You came the right way,"</em> she whispers, tears ceasing
+            at once. <em>"The crown path leads to power. The flame path
+            leads to wisdom. But only the moon path leads to truth."</em>
+            She holds out a small hand, in her palm — a single seed
+            that pulses with cold blue light.
+          </p>
+ 
+          <div class="ornamental-rule"><span>✦</span></div>
+ 
+          <p class="choices-header">⟡ What do you do?</p>
+          <div class="choices">
+            <button class="choice-btn" onclick="goTo('end-hero')">
+              <span class="choice-glyph">I</span>
+              <span class="choice-text">Take the seed and ask her where it must be planted — you sense this is the heart of everything.</span>
+            </button>
+            <button class="choice-btn" onclick="goTo('scene-3e')">
+              <span class="choice-glyph">II</span>
+              <span class="choice-text">Ask who she really is before accepting anything — kindness can be a mask, even in fairy tales.</span>
+            </button>
+          </div>
+        </div>
+ 
+        <!-- ══════════════════════════════════════════
+             SCENE 3A · Honorable Entry
+        ══════════════════════════════════════════ -->
+        <div id="scene-3a" class="scene">
+          <div class="scene-illustration" style="background: linear-gradient(180deg, #0a0a1a 0%, #2a1a4a 100%);">
+            📜👑📜
+          </div>
+          <p class="chapter-label">Chapter III</p>
+          <h2 class="scene-title">The Name in the Ledger</h2>
+ 
+          <p class="scene-text">
+            The moment your name touches the page, the ink ignites in gold.
+            The guard wakes with a start, then bows deeply. <em>"We have been
+            waiting centuries for this name,"</em> he breathes. The gates
+            swing wide, and the castle's cold blue light warms to amber —
+            as if the castle itself is exhaling in relief.
+          </p>
+          <p class="scene-text no-drop">
+            You are brought before the Shadow Court, where a throne sits
+            empty — and every councillor turns to you with the same
+            unnerving hope in their eyes. The compass in your satchel
+            falls perfectly, gloriously still.
+          </p>
+ 
+          <div class="ornamental-rule"><span>✦</span></div>
+ 
+          <p class="choices-header">⟡ What do you do?</p>
+          <div class="choices">
+            <button class="choice-btn" onclick="goTo('end-crown')">
+              <span class="choice-glyph">I</span>
+              <span class="choice-text">Accept the crown they offer you — this is what you were always meant for, and the kingdom needs a ruler now.</span>
+            </button>
+            <button class="choice-btn" onclick="goTo('end-humble')">
+              <span class="choice-glyph">II</span>
+              <span class="choice-text">Decline the throne and instead ask what truly ails the kingdom — power alone cannot be the answer.</span>
+            </button>
+          </div>
+        </div>
+ 
+        <!-- ══════════════════════════════════════════
+             SCENE 3B · Sneaking In
+        ══════════════════════════════════════════ -->
+        <div id="scene-3b" class="scene">
+          <div class="scene-illustration" style="background: linear-gradient(180deg, #050508 0%, #1a0a2a 100%);">
+            🔍🗝️🔍
+          </div>
+          <p class="chapter-label">Chapter III</p>
+          <h2 class="scene-title">Shadows Within the Walls</h2>
+ 
+          <p class="scene-text">
+            You slip through the courtyard like a shadow, the compass
+            pulling you to a cellar door half-hidden beneath a flowering
+            vine. Inside: a library so vast its upper shelves disappear
+            into darkness. And at its center — a locked glass case
+            containing a book that is <em>actively writing itself</em>,
+            its quill scratching furiously without a hand to hold it.
+          </p>
+          <p class="scene-text no-drop">
+            The book stops when you approach. One sentence fades in,
+            slow and deliberate, written for you alone: <em>"The thief
+            and the heir are sometimes the same person."</em>
+          </p>
+ 
+          <div class="ornamental-rule"><span>✦</span></div>
+ 
+          <p class="choices-header">⟡ What do you do?</p>
+          <div class="choices">
+            <button class="choice-btn" onclick="goTo('end-shadow')">
+              <span class="choice-glyph">I</span>
+              <span class="choice-text">Break the glass and take the book — whatever secret it holds, you were clearly meant to find it.</span>
+            </button>
+            <button class="choice-btn" onclick="goTo('end-humble')">
+              <span class="choice-glyph">II</span>
+              <span class="choice-text">Leave the book untouched and go find someone in authority — some things must be earned, not taken.</span>
+            </button>
+          </div>
+        </div>
+ 
+        <!-- ══════════════════════════════════════════
+             SCENE 3C · The Witch Explains
+        ══════════════════════════════════════════ -->
+        <div id="scene-3c" class="scene">
+          <div class="scene-illustration" style="background: linear-gradient(180deg, #1a0505 0%, #3a1505 60%, #1a3005 100%);">
+            🧙‍♀️🌿✨
+          </div>
+          <p class="chapter-label">Chapter III</p>
+          <h2 class="scene-title">The Story of What Was Lost</h2>
+ 
+          <p class="scene-text">
+            She sits you down with tea that tastes like sunrise and begins
+            to speak. Her name is Maeara. She has lived in this wood
+            for three hundred years, tending the ember that keeps all
+            magic in Aeloria alive — a tiny flame cupped in a clay
+            vessel on her mantlepiece. <em>"It's almost out,"</em> she
+            says softly. <em>"And only the bloodline of the Star-Binders
+            can relight it. Your grandmother knew."</em>
+          </p>
+          <p class="scene-text no-drop">
+            She hands you a clay vessel — warm, pulsing gently. You
+            understand, now, everything.
+          </p>
+ 
+          <div class="ornamental-rule"><span>✦</span></div>
+ 
+          <p class="choices-header">⟡ What do you do?</p>
+          <div class="choices">
+            <button class="choice-btn" onclick="goTo('end-hero')">
+              <span class="choice-glyph">I</span>
+              <span class="choice-text">Accept the vessel and pledge to relight the ember — this is your inheritance and your responsibility.</span>
+            </button>
+            <button class="choice-btn" onclick="goTo('end-shadow')">
+              <span class="choice-glyph">II</span>
+              <span class="choice-text">Ask if there is another way — surely the cost of an ancient lineage need not fall entirely upon you.</span>
+            </button>
+          </div>
+        </div>
+ 
+        <!-- ══════════════════════════════════════════
+             SCENE 3D · Compass Revealed
+        ══════════════════════════════════════════ -->
+        <div id="scene-3d" class="scene">
+          <div class="scene-illustration" style="background: linear-gradient(180deg, #1a0a02 0%, #4a2a08 100%);">
+            🧭🔮🧭
+          </div>
+          <p class="chapter-label">Chapter III</p>
+          <h2 class="scene-title">The Compass Speaks</h2>
+ 
+          <p class="scene-text">
+            The moment Maeara sees the compass, she gasps and stumbles
+            backward. <em>"Where did you get this?"</em> she whispers.
+            Her mismatched eyes fill with tears — sunrise-gold tears
+            and storm-grey tears at once. She reaches out but
+            doesn't touch it. <em>"This belonged to the first Star-Binder.
+            I made it. Three centuries ago. For the child I thought
+            would never come."</em>
+          </p>
+          <p class="scene-text no-drop">
+            She is weeping fully now, but she is smiling. The cottage
+            around you blooms — every flower opening at once,
+            flooding the air with impossible fragrance.
+          </p>
+ 
+          <div class="ornamental-rule"><span>✦</span></div>
+ 
+          <p class="choices-header">⟡ What do you do?</p>
+          <div class="choices">
+            <button class="choice-btn" onclick="goTo('end-hero')">
+              <span class="choice-glyph">I</span>
+              <span class="choice-text">Embrace her — this woman has been waiting centuries for your family, and no one should wait alone that long.</span>
+            </button>
+            <button class="choice-btn" onclick="goTo('end-crown')">
+              <span class="choice-glyph">II</span>
+              <span class="choice-text">Ask what your destiny truly requires of you — sentiment is beautiful, but the stars are still dark.</span>
+            </button>
+          </div>
+        </div>
+ 
+        <!-- ══════════════════════════════════════════
+             SCENE 3E · Questioning the Child
+        ══════════════════════════════════════════ -->
+        <div id="scene-3e" class="scene">
+          <div class="scene-illustration" style="background: linear-gradient(180deg, #030308 0%, #0a0a2a 100%);">
+            🌟👁️🌟
+          </div>
+          <p class="chapter-label">Chapter III</p>
+          <h2 class="scene-title">The Truth Beneath the Moon</h2>
+ 
+          <p class="scene-text">
+            The child smiles — not the smile of a child, but something
+            older and kinder. She grows, slowly, into a form of pure
+            silver light, and when the light fades, a woman stands before
+            you in robes stitched from constellations. She is Aeloria
+            itself — the kingdom given form, the land made conscious
+            by centuries of the world's love.
+          </p>
+          <p class="scene-text no-drop">
+            <em>"You asked the right question,"</em> she says. <em>"Every
+            hero who came before simply took. You are the first to ask
+            who I am. For that — the seed is yours freely,
+            and so is everything it grows into."</em>
+          </p>
+ 
+          <div class="ornamental-rule"><span>✦</span></div>
+ 
+          <p class="choices-header">⟡ What do you do?</p>
+          <div class="choices">
+            <button class="choice-btn" onclick="goTo('end-hero')">
+              <span class="choice-glyph">I</span>
+              <span class="choice-text">Take the seed with reverence and ask her to guide you to where it must be planted — together.</span>
+            </button>
+          </div>
+        </div>
+ 
+        <!-- ══════════════════════════════════════════
+             ENDINGS
+        ══════════════════════════════════════════ -->
+ 
+        <!-- END: The True Hero -->
+        <div id="end-hero" class="scene">
+          <div class="scene-illustration" style="background: linear-gradient(180deg, #050f05 0%, #0a2a1a 60%, #1a4a2a 100%);">
+            ✨🌟✨🌟✨
+          </div>
+          <p class="chapter-label">Epilogue</p>
+          <h2 class="scene-title">The Stars Return</h2>
+ 
+          <p class="scene-text">
+            You plant the seed in the heart of the Whispering Wood —
+            the place where all three paths meet. It erupts immediately
+            into a tree of impossible, radiant beauty, its branches
+            extending upward and outward, each leaf a burning star
+            being flung back to its place in the sky. One by one,
+            the heavens fill.
+          </p>
+          <p class="scene-text no-drop">
+            By dawn, every star has returned. The kingdom wakes
+            slowly, rubbing sleep from its eyes, stepping outside
+            to tilt their faces upward and weep with relief.
+            Somewhere in the wood, a cottage glows warmly.
+            An old woman brews tea and smiles.
+            And on the empty throne in Castle Vaelthorn,
+            someone has left a single silver flower.
+            No one saw who left it — but everyone knows.
+          </p>
+ 
+          <div class="ornamental-rule"><span>⸻ ✦ ⸻</span></div>
+ 
+          <div class="ending-banner triumph">
+            <p class="ending-label">✦ &nbsp; True Ending Achieved &nbsp; ✦</p>
+            <p class="ending-title">The Starkeeper's Heir</p>
+            <p style="font-family:var(--font-elegant); font-style:italic; font-size:0.95rem; color:var(--forest); margin-top:0.5rem;">
+              You chose compassion over power, and in doing so,
+              became the most powerful of all.
+            </p>
+          </div>
+ 
+          <div style="text-align:center;">
+            <button class="restart-btn" onclick="restart()">✦ &nbsp; Begin Again &nbsp; ✦</button>
+          </div>
+        </div>
+ 
+        <!-- END: The Crown -->
+        <div id="end-crown" class="scene">
+          <div class="scene-illustration" style="background: linear-gradient(180deg, #0a0a1a 0%, #1a1a4a 100%);">
+            👑⚡👑
+          </div>
+          <p class="chapter-label">Epilogue</p>
+          <h2 class="scene-title">The Ruler of Dust and Stars</h2>
+ 
+          <p class="scene-text">
+            You take the throne. The kingdom rallies. For a generation,
+            Aeloria knows peace under your careful hand — and you are
+            a just and thoughtful ruler. But the stars, once lost,
+            do not return on their own. Some nights you climb the
+            highest tower and stare at a sky half-empty, feeling
+            the weight of what was not done.
+          </p>
+          <p class="scene-text no-drop">
+            Power was always within your grasp. What remains to be
+            found is the thing power cannot buy. Perhaps in the next
+            chapter, you will seek it. Perhaps you already know where to look.
+          </p>
+ 
+          <div class="ornamental-rule"><span>⸻ ✦ ⸻</span></div>
+ 
+          <div class="ending-banner dark">
+            <p class="ending-label">❧ &nbsp; A Noble Ending &nbsp; ❧</p>
+            <p class="ending-title">The Unfinished King</p>
+            <p style="font-family:var(--font-elegant); font-style:italic; font-size:0.95rem; color:var(--crimson); margin-top:0.5rem;">
+              You have power — but not yet wisdom. The story continues.
+            </p>
+          </div>
+ 
+          <div style="text-align:center;">
+            <button class="restart-btn" onclick="restart()">✦ &nbsp; Try Another Path &nbsp; ✦</button>
+          </div>
+        </div>
+ 
+        <!-- END: The Shadow -->
+        <div id="end-shadow" class="scene">
+          <div class="scene-illustration" style="background: linear-gradient(180deg, #050505 0%, #1a0520 100%);">
+            📖🌑📖
+          </div>
+          <p class="chapter-label">Epilogue</p>
+          <h2 class="scene-title">The Price of Secrets</h2>
+ 
+          <p class="scene-text">
+            You take what you came for — the knowledge, the book,
+            the answers you sought. They are real and powerful and
+            dangerous in the best possible way. But as you slip back
+            through the gate and into the forest, you feel the
+            compass go cold and still in your satchel. Not because
+            you've reached the end. Because you've chosen to walk
+            a road with no map — and that is its own kind of courage.
+          </p>
+          <p class="scene-text no-drop">
+            The wood closes behind you. The stars remain dark.
+            But in your hands, you hold enough to begin again —
+            this time, on your own terms, with your own light.
+          </p>
+ 
+          <div class="ornamental-rule"><span>⸻ ✦ ⸻</span></div>
+ 
+          <div class="ending-banner dark">
+            <p class="ending-label">❧ &nbsp; The Hidden Path &nbsp; ❧</p>
+            <p class="ending-title">The Keeper of Shadows</p>
+            <p style="font-family:var(--font-elegant); font-style:italic; font-size:0.95rem; color:var(--violet); margin-top:0.5rem;">
+              Knowledge has its own kind of power. What you do with it — that is the real story.
+            </p>
+          </div>
+ 
+          <div style="text-align:center;">
+            <button class="restart-btn" onclick="restart()">✦ &nbsp; Begin Again &nbsp; ✦</button>
+          </div>
+        </div>
+ 
+        <!-- END: Humble Seeker -->
+        <div id="end-humble" class="scene">
+          <div class="scene-illustration" style="background: linear-gradient(180deg, #0a0805 0%, #2a2010 100%);">
+            🙏🌿🙏
+          </div>
+          <p class="chapter-label">Epilogue</p>
+          <h2 class="scene-title">The Long, Right Road</h2>
+ 
+          <p class="scene-text">
+            You step back from the crown, from the glass case, from
+            all the things that were offered so easily. Something about
+            easy offerings has always felt like a test — and you have
+            always suspected the real answer is the slower one.
+          </p>
+          <p class="scene-text no-drop">
+            You spend three months in the kingdom, learning its people,
+            its wounds, its history. You sit with farmers and
+            scholars and children alike. And when you finally act —
+            when you finally know what the kingdom truly needs —
+            you act with such sure-handed grace that the councillors
+            wonder why they ever doubted. The stars begin, very slowly,
+            to return. One per night. Like a lullaby.
+          </p>
+ 
+          <div class="ornamental-rule"><span>⸻ ✦ ⸻</span></div>
+ 
+          <div class="ending-banner triumph">
+            <p class="ending-label">✦ &nbsp; The Patient Ending &nbsp; ✦</p>
+            <p class="ending-title">The Healer of Kingdoms</p>
+            <p style="font-family:var(--font-elegant); font-style:italic; font-size:0.95rem; color:var(--forest); margin-top:0.5rem;">
+              The wisest path is rarely the fastest one.
+            </p>
+          </div>
+ 
+          <div style="text-align:center;">
+            <button class="restart-btn" onclick="restart()">✦ &nbsp; Begin Again &nbsp; ✦</button>
+          </div>
+        </div>
+ 
+        <!-- Decorative footer -->
+        <div class="ornamental-rule" style="margin-top:2rem;">
+          <span>⸻ ❧ ⸻</span>
+        </div>
+        <div class="book-footer">
+          The Enchanted Chronicles · An Interactive Tale · All paths lead somewhere
+        </div>
+ 
+      </div><!-- /.page-border -->
+    </div><!-- /.book -->
+  </div><!-- /.book-wrap -->
+ 
+  <script>
+    // ── Path History ──────────────────────────────────────────────
+    const pathHistory = [];
+ 
+    const sceneLabels = {
+      'scene-1':  'The Crossroads',
+      'scene-2a': 'Castle Gates',
+      'scene-2b': 'The Witch',
+      'scene-2c': 'The Child',
+      'scene-3a': 'The Ledger',
+      'scene-3b': 'The Library',
+      'scene-3c': 'The Ember',
+      'scene-3d': 'The Compass',
+      'scene-3e': 'The Truth',
+      'end-hero':   'The Starkeeper',
+      'end-crown':  'The Crown',
+      'end-shadow': 'The Shadows',
+      'end-humble': 'The Patient Path',
+    };
+ 
+    function updateTrail() {
+      const trail = document.getElementById('trail');
+      if (pathHistory.length === 0) { trail.textContent = ''; return; }
+      trail.textContent = 'Your path: ' + pathHistory.map(id => sceneLabels[id] || id).join(' → ');
+    }
+ 
+    function goTo(id) {
+      // Record path
+      if (id !== 'cover') {
+        pathHistory.push(id);
+        updateTrail();
+      }
+ 
+      // Hide all scenes
+      document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+ 
+      // Show target
+      const target = document.getElementById(id);
+      if (target) {
+        target.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+ 
+    function restart() {
+      pathHistory.length = 0;
+      updateTrail();
+      document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+      document.getElementById('cover').classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+ 
+    // ── Ambient Particles ─────────────────────────────────────────
+    const container = document.getElementById('particles');
+    for (let i = 0; i < 30; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.cssText = `
+        left: ${Math.random() * 100}%;
+        top: ${80 + Math.random() * 20}%;
+        width: ${2 + Math.random() * 4}px;
+        height: ${2 + Math.random() * 4}px;
+        animation-duration: ${6 + Math.random() * 12}s;
+        animation-delay: ${Math.random() * 10}s;
+        opacity: ${0.3 + Math.random() * 0.5};
+      `;
+      container.appendChild(p);
+    }
+  </script>
+ 
+</body>
+</html>
